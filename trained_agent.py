@@ -16,16 +16,8 @@ import torch
 from typing import Optional, List
 from collections import deque
 
-
-try:
-    from model import OpenTrackVLA as PlannerModel, ModelConfig as PlannerConfig
-    from cache_gridpool import VisionFeatureCacher, VisionCacheConfig, grid_pool_tokens
-except Exception:
-    PlannerModel = None  # type: ignore
-    PlannerConfig = None  # type: ignore
-    VisionFeatureCacher = None  # type: ignore
-    VisionCacheConfig = None  # type: ignore
-    grid_pool_tokens = None  # type: ignore
+from model import OpenTrackVLA as PlannerModel, ModelConfig as PlannerConfig
+from cache_gridpool import VisionFeatureCacher, VisionCacheConfig, grid_pool_tokens
 
 try:
     from open_trackvla_hf import OpenTrackVLAForWaypoint
@@ -269,12 +261,10 @@ class GTBBoxAgent(AgentConfig):
         if VisionFeatureCacher is None or VisionCacheConfig is None:
             return None
         if self._vision_cache is None:
-            try:
-                cfg = VisionCacheConfig(image_size=384, batch_size=1, device=('cuda' if torch.cuda.is_available() else 'cpu'))
-                self._vision_cache = VisionFeatureCacher(cfg)
-                self._vision_cache.eval()
-            except Exception:
-                self._vision_cache = None
+            cfg = VisionCacheConfig(image_size=384, batch_size=1,
+                                    device=('cuda' if torch.cuda.is_available() else 'cpu'))
+            self._vision_cache = VisionFeatureCacher(cfg)
+            self._vision_cache.eval()
         return self._vision_cache
 
     def _is_hf_dir(self, path: str) -> bool:

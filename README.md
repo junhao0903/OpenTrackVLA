@@ -35,7 +35,23 @@ The system processes video history and text instructions to predict future waypo
    ```
 2. **Install Habitat-Sim 0.3.1 (with Bullet)**
    ```bash
-   conda install habitat-sim==0.3.1 withbullet -c conda-forge -c aihabitat
+   # 创建conda环境
+    conda create -n habitat python=3.9 cmake=3.14.0
+    conda activate habitat
+     
+    # 安装Python依赖
+    pip install -r requirements.txt
+     
+    # Ubuntu系统依赖
+    sudo apt-get update
+    sudo apt-get install -y --no-install-recommends \
+    libjpeg-dev libglm-dev libgl1-mesa-glx \
+    libegl1-mesa-dev mesa-utils xorg-dev freeglut3-dev
+    pip install torch==2.2.0 torchvision==0.17.0 torchaudio==2.2.0   --index-url https://download.pytorch.org/whl/cu118
+   
+    # 带物理引擎
+    python setup.py install --bullet
+
    ```
 3. **Clone this repository**
    ```bash
@@ -176,6 +192,15 @@ python train.py \
   ```bash
   huggingface-cli download omlab/opentrackvla-qwen06b --local-dir open_trackvla_hf
   HF_MODEL_DIR=$(pwd)/open_trackvla_hf bash eval.sh
+  
+  # 本模型依赖Qwen3-0.6B，可提前先下载，下载完后记录模型的位置，如~/.cache/huggingface/hub/models--Qwen--Qwen3-0.6B/snapshots/c1899de289a04d12100db370d81485cdf75e47ca/
+  # 此时可修改open_trackvla_hf/config.json中的"llm_name"为上述Qwen3-0.6B路径，这样就不用联网也可以跑
+  
+  # 本模型依赖dino3，可提前先下载，方式如下
+  # pip install modelscope
+  # modelscope download --model facebook/dinov3-vitl16-pretrain-lvd1689m
+  # 找到下载后的路径，如~/.cache/modelscope/hub/models/facebook/dinov3-vitl16-pretrain-lvd1689m
+  # 届时根据实际路径修改cache_gridpool.py中self.dino_model_name的路径
   ```
 
 ### 5.2 Evaluating Custom Checkpoints

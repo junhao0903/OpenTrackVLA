@@ -210,7 +210,7 @@ def adapt_siglip_grid(tokens: torch.Tensor, grid_hw: Optional[Tuple[int, int]] =
 @dataclass
 class VisionCacheConfig:
     dino_model_name: str = None  # Will be set from env or default
-    siglip_model_name: str = "google/siglip-so400m-patch14-384"
+    siglip_model_name: str = None
     image_size: int = 384          # enforce 384 for both towers
     batch_size: int = 24
     device: str = "cuda" if torch.cuda.is_available() else "cpu"
@@ -220,11 +220,18 @@ class VisionCacheConfig:
     def __post_init__(self):
         # Check environment variable for local DINOv3 model path
         if self.dino_model_name is None:
-            env_path = os.getenv("DINOV3_MODEL_PATH", "").strip()
+            env_path = "open_trackvla_hf/dinov3-vitl16"
             if env_path and os.path.exists(env_path):
                 self.dino_model_name = env_path
             else:
                 self.dino_model_name = "facebook/dinov3-vits16-pretrain-lvd1689m"
+
+        if self.siglip_model_name is None:
+            env_path = "open_trackvla_hf/siglip-so400m"
+            if env_path and os.path.exists(env_path):
+                self.siglip_model_name = env_path
+            else:
+                self.siglip_model_name = "google/siglip-so400m-patch14-384"
 
 
 class VisionFeatureCacher(nn.Module):
