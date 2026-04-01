@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+# Monkey patch for torch.compiler.is_compiling (missing in PyTorch 2.2.0)
+import torch
+if not hasattr(torch.compiler, 'is_compiling'):
+    torch.compiler.is_compiling = lambda: False
+
 from dataclasses import dataclass
 from typing import List, Dict, Any, Optional, Tuple
 import os

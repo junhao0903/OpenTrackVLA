@@ -35,10 +35,8 @@ The system processes video history and text instructions to predict future waypo
    ```
 2. **Install Habitat-Sim 0.3.1 (with Bullet)**
    ```bash
-   # 创建conda环境
-    conda create -n habitat python=3.9 cmake=3.14.0
-    conda activate habitat
-     
+    git clone --branch stable https://gitcode.com/GitHub_Trending/ha/habitat-sim.git
+    cd habitat-sim   
     # 安装Python依赖
     pip install -r requirements.txt
      

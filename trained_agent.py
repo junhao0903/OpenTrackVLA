@@ -376,7 +376,10 @@ class GTBBoxAgent(AgentConfig):
             Vfine = grid_pool_tokens(Vt_cat, Hp, Wp, out_tokens=64)[0].float()   # (64, C)
             Vcoarse = grid_pool_tokens(Vt_cat, Hp, Wp, out_tokens=4)[0].float()  # (4, C)
             return Vcoarse, Vfine
-        except Exception:
+        except Exception as e:
+            print(f"[DEBUG] Exception in _encode_frame_tokens: {e}")
+            import traceback
+            traceback.print_exc()
             return None, None
 
     def _planner_action(self, rgb_frame_np: np.ndarray, instruction: Optional[str]) -> Optional[List[float]]:
@@ -436,7 +439,10 @@ class GTBBoxAgent(AgentConfig):
             print (f"Planner action: {vx}, {vy}, {wz}")
             return [float(vx), float(vy), float(wz)]
             
-        except Exception:
+        except Exception as e:
+            print(f"[DEBUG] Exception in planner_action: {e}")
+            import traceback
+            traceback.print_exc()
             self._last_predicted_traj = None
             return None
 
